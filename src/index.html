@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./output.css">
+    <title>Codetales</title>
+</head>
+
+<body class="bg-gray-100 font-poppins text-gray-800">
+    <div class="bg-[url('./assets/image/cover.jpg')] bg-cover bg-no-repeat min-h-screen h-full">
+        <header class="flex flex-row items-center px-4 py-4 sm:flex-row sm:justify-between sm:px-12">
+            <div class="flex flex-row items-center sm:items-center sm:gap-3">
+                <img src="./assets/image/codetales_logo.png" alt="Logo" class="w-16 sm:w-20 h-auto">
+                <h1 class="text-2xl sm:text-3xl font-bold font-poppins mt-2 sm:mt-0">Codetales</h1>
+            </div>
+            <div class="hidden md:block">
+                <h1 class="text-xl sm:text-3xl font-bold font-poppins">BSCS 3A</h1>
+            </div>
+        </header>
+        <main class="w-full max-w-6xl mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Book 1 -->
+                <div class="relative group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div class="relative">
+                        <img src="./assets/image/book1.png" alt="Book Title" class="w-full h-auto object-contain max-h-[700px]">
+                        <!-- Mobile: Always visible overlay; Desktop: Only on hover -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent md:opacity-0 opacity-100 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-2xl font-bold text-white mb-2">This is the Book Title</h3>
+                            <p class="text-white text-sm mb-4">A captivating story that takes you on a journey through magical realms and unexpected adventures.</p>
+                            <button class="bg-white text-gray-800 font-bold py-2 px-4 rounded-full hover:bg-gray-200 transition-colors">Read Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book 2 -->
+                <div class="relative group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div class="relative">
+                        <img src="./assets/image/book2.png" alt="A Million to One" class="w-full h-auto object-contain max-h-[700px]">
+                        <!-- Mobile: Always visible overlay; Desktop: Only on hover -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent md:opacity-0 opacity-100 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-2xl font-bold text-white mb-2">A Million to One</h3>
+                            <p class="text-white text-sm mb-4">There are some demons that you never see coming. Book two of the Fasano Trilogy.</p>
+                            <button class="bg-white text-gray-800 font-bold py-2 px-4 rounded-full hover:bg-gray-200 transition-colors">Read Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book 3 -->
+                <div class="relative group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div class="relative">
+                        <img src="./assets/image/book3.png" alt="Beyond the Ocean Door" class="w-full h-auto object-contain max-h-[700px]">
+                        <!-- Mobile: Always visible overlay; Desktop: Only on hover -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent md:opacity-0 opacity-100 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                            <h3 class="text-2xl font-bold text-white mb-2">Beyond the Ocean Door</h3>
+                            <p class="text-white text-sm mb-4">Two telepaths. One daring escape plan. A journey that will take you beyond imagination.</p>
+                            <button class="bg-white text-gray-800 font-bold py-2 px-4 rounded-full hover:bg-gray-200 transition-colors">Read Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
