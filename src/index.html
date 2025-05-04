@@ -8,8 +8,40 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
+    <!-- Preload critical images -->
+    <link rel="preload" href="./assets/image/codetales_logo.png" as="image">
+    <link rel="preload" href="./assets/image/cover.jpg" as="image">
     <link rel="stylesheet" href="./output.css">
     <title>Codetales</title>
+    <style>
+        .image-loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(229, 231, 235, 0.7);
+            transition: opacity 0.3s ease-in-out;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #3b82f6;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loaded .image-loader {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100 font-poppins text-gray-800">
@@ -27,8 +59,15 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Book 1 -->
                 <div class="relative group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
-                    <div class="relative">
-                        <img src="./assets/image/book1.png" alt="Book Title" class="w-full h-auto object-contain max-h-[700px]">
+                    <div class="relative book-container" data-loaded="false">
+                        <div class="image-loader">
+                            <div class="spinner"></div>
+                        </div>
+                        <img src="./assets/image/book1.png" alt="Book Title" 
+                             class="w-full h-auto object-contain max-h-[700px]"
+                             loading="lazy"
+                             width="350" height="525"
+                             onload="this.parentNode.setAttribute('data-loaded', 'true'); this.parentNode.classList.add('loaded');">
                         <!-- Mobile: Always visible overlay; Desktop: Only on hover -->
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent md:opacity-0 opacity-100 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                             <h3 class="text-2xl font-bold text-white mb-2">This is the Book Title</h3>
@@ -40,8 +79,15 @@
 
                 <!-- Book 2 -->
                 <div class="relative group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
-                    <div class="relative">
-                        <img src="./assets/image/book2.png" alt="A Million to One" class="w-full h-auto object-contain max-h-[700px]">
+                    <div class="relative book-container" data-loaded="false">
+                        <div class="image-loader">
+                            <div class="spinner"></div>
+                        </div>
+                        <img src="./assets/image/book2.png" alt="A Million to One" 
+                             class="w-full h-auto object-contain max-h-[700px]"
+                             loading="lazy"
+                             width="350" height="525"
+                             onload="this.parentNode.setAttribute('data-loaded', 'true'); this.parentNode.classList.add('loaded');">
                         <!-- Mobile: Always visible overlay; Desktop: Only on hover -->
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent md:opacity-0 opacity-100 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                             <h3 class="text-2xl font-bold text-white mb-2">A Million to One</h3>
@@ -53,8 +99,15 @@
 
                 <!-- Book 3 -->
                 <div class="relative group overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
-                    <div class="relative">
-                        <img src="./assets/image/book3.png" alt="Beyond the Ocean Door" class="w-full h-auto object-contain max-h-[700px]">
+                    <div class="relative book-container" data-loaded="false">
+                        <div class="image-loader">
+                            <div class="spinner"></div>
+                        </div>
+                        <img src="./assets/image/book3.png" alt="Beyond the Ocean Door" 
+                             class="w-full h-auto object-contain max-h-[700px]"
+                             loading="lazy"
+                             width="350" height="525"
+                             onload="this.parentNode.setAttribute('data-loaded', 'true'); this.parentNode.classList.add('loaded');">
                         <!-- Mobile: Always visible overlay; Desktop: Only on hover -->
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent md:opacity-0 opacity-100 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                             <h3 class="text-2xl font-bold text-white mb-2">Beyond the Ocean Door</h3>
@@ -66,5 +119,37 @@
             </div>
         </main>
     </div>
+
+    <script>
+        // Script to handle progressive loading
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create low-resolution thumbnails or compressed versions of these images for production
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        const src = img.getAttribute('src');
+                        
+                        // Once the image is in viewport, ensure it starts loading if it hasn't already
+                        if (img.getAttribute('loading') === 'lazy') {
+                            // Image will load when it's in or near the viewport
+                            console.log('Loading image:', src);
+                        }
+                        
+                        // Stop observing after we start loading
+                        observer.unobserve(img);
+                    }
+                });
+            }, {
+                rootMargin: '100px 0px', // Start loading when image is 100px from viewport
+                threshold: 0.01
+            });
+            
+            // Observe all book images
+            document.querySelectorAll('.book-container img').forEach(img => {
+                imageObserver.observe(img);
+            });
+        });
+    </script>
 </body>
 </html>
