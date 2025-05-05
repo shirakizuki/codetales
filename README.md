@@ -4,7 +4,7 @@ CodeTales is a digital book and comic platform that originated in the Philippine
 
 ## About the Project
 
-CodeTales started as a solo project with the goal of modernizing the way literature is consumed and experienced. By combining traditional storytelling with digital innovation, CodeTales creates an immersive reading experience for users of all ages.
+CodeTales started as a class project with the goal of modernizing the way literature is consumed and experienced. By combining traditional storytelling with digital innovation, CodeTales creates an immersive reading experience for users of all ages.
 
 ### Features
 
