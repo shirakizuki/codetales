@@ -1,13 +1,71 @@
-# React + TypeScript + Vite
+# CodeTales
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+CodeTales is a digital book and comic platform that originated in the Philippines as a project for Literature 11. This interactive application brings stories and comics to life in a digital format, making literature more accessible and engaging for readers.
+
+## About the Project
+
+CodeTales started as a solo project with the goal of modernizing the way literature is consumed and experienced. By combining traditional storytelling with digital innovation, CodeTales creates an immersive reading experience for users of all ages.
+
+### Features
+
+- **Digital Library**: Browse a collection of books and comics
+- **Story Mode**: Read stories with interactive elements
+- **Comic Viewer**: Experience comics with enhanced digital features
+- **Responsive Design**: Enjoy content on any device
+- **Filipino Literature Focus**: Highlighting works from Philippine authors and artists
+
+## Technical Details
+
+This project is built with:
+
+- React 18
+- TypeScript
+- Vite (for fast development)
+- React Router (for navigation)
+
+### Route Structure
+
+- `/library/list_all` - Browse all available books and comics
+- `/story/element_id=:id/:title/:filters?` - View a specific story
+- `/comic/element_id=:id/:title/:filters?` - View a specific comic
+- `/about` - Learn more about CodeTales
+
+## Development
+
+### Getting Started
+
+1. Clone the repository
+   ```bash
+   git clone https://github.com/yourusername/codetales.git
+   cd codetales
+   ```
+
+2. Install dependencies
+   ```bash
+   npm install
+   ```
+
+3. Start the development server
+   ```bash
+   npm run dev
+   ```
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+## Original Vite Template Information
+
+This project was bootstrapped with Vite's React TypeScript template.
 
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+### ESLint Configuration
 
 If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
@@ -31,24 +89,12 @@ export default tseslint.config({
 })
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## License
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+[MIT](LICENSE)
+
+## Contact
+
+For questions or feedback about CodeTales, please open an issue in this repository.
