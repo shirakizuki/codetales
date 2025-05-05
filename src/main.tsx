@@ -11,12 +11,12 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 // PAGES
 import App from './App.tsx'
 
-import { ErrorPage } from '@/pages/ErrorPage.tsx';
-import { NotFoundPage } from '@/pages/NotFoundPage.tsx';
-import { AboutPage } from '@/pages/AboutPage.tsx';
-import { LibraryDetail } from '@/pages/LibraryDetail.tsx';
-import { StoryPage } from '@/pages/StoryPage.tsx';
-import { ComicPage } from '@/pages/ComicPage.tsx';
+import { NotFoundPage } from './pages/NotFoundPage.tsx';
+import { ErrorPage } from './pages/ErrorPage.tsx';
+import { AboutPage } from './pages/AboutPage.tsx';
+import { ContentPage } from './pages/ContentPage.tsx';
+import { ComicDetail } from './pages/ComicDetail.tsx';
+import { StoryDetail } from './pages/StoryDetail.tsx';
 
 const router = createBrowserRouter([
   {
@@ -37,21 +37,21 @@ const router = createBrowserRouter([
         element: <AboutPage />,
       },
       {
-        path: "library",
-        element: <LibraryDetail />,
+        path: "content/:contentId",
+        element: <ContentPage />,
         errorElement: <ErrorPage />,
-      },
-      {
-        // Story detail routes with the pattern you requested
-        path: "story/element_id=:elementId/:titleSlug/:filters?",
-        element: <StoryPage />,
-        errorElement: <ErrorPage />,
-      },
-      {
-        // Comic detail routes with similar pattern
-        path: "comic/element_id=:elementId/:titleSlug/:filters?",
-        element: <ComicPage />,
-        errorElement: <ErrorPage />,
+        children: [
+          {
+            path: "read/comic/:titleSlug/:filters?",
+            element: <ComicDetail />,
+            errorElement: <ErrorPage />,
+          },
+          {
+            path: "read/story/:titleSlug/:filters?",
+            element: <StoryDetail />,
+            errorElement: <ErrorPage />,
+          }
+        ]
       }
     ]
   }
