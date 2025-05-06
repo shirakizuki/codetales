@@ -16,6 +16,8 @@ function getEnvironment(key: string): string {
     return value;
 }
 
+console.log('ASDASD');
+
 export const env = {
     firebaseApiKey: getEnvironment('VITE_FIREBASE_API_KEY'),
     firebaseAuthDomain: getEnvironment('VITE_FIREBASE_AUTH_DOMAIN'),
