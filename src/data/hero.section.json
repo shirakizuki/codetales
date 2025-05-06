@@ -11,12 +11,15 @@
         "rating": 4.5
     },
     "2": {
-        "title": "A Million To One",
+        "title": "The Necklace",
         "genres": [
-            "Audiobook"
+            "Fiction",
+            "Short Story",
+            "Classic",
+            "Historical Fiction"
         ],
-        "description": "As our story unfolds, it becomes clear that there is hell, and then there is hell on earth. And worst of all...there are some demons you never see coming.",
-        "heroImage": "a_million_to_one_thumbnail.png",
+        "description": "Mathilde, a prideful woman longing for luxury, borrows a necklace for a fancy ball—but after losing it and spending years repaying the debt, she learns it was a worthless fake all along.",
+        "heroImage": "the_necklace_thumbnail.png",
         "rating": 4.23
     },
     "3": {

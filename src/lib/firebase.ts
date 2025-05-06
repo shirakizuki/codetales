@@ -4,10 +4,6 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
-// Firebase Analytics
-import { getAnalytics, isSupported } from 'firebase/analytics';
-import type { Analytics } from 'firebase/analytics';
-
 // Environment variables
 import { env } from './env';
 
@@ -30,19 +26,6 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
-
-
-let analytics: Analytics | null = null;
-if (typeof window !== 'undefined') {
-    isSupported().then(supported => {
-        if (supported) {
-            analytics = getAnalytics(app);
-        }
-    });
-}
-
-export { analytics };
-
 /**
  * Firebase context for the application
  */
@@ -51,7 +34,6 @@ const firebase = {
     auth,
     db,
     storage,
-    analytics
 };
 
 export default firebase;

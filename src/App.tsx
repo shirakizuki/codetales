@@ -3,45 +3,64 @@ import Navbar from "@/components/Navbar"
 import { Footer } from "@/components/Footer"
 import { Link } from "react-router-dom"
 import { Star, Eye } from "lucide-react"
-import heroData from "@/data/hero.section.json"
 import { useState, useEffect, useRef } from "react"
 
 // Import thumbnail images directly
-import whyMeThumbnail from "./assets/thumbnails/why_me_thumbnail.png"
-import aMillionToOneThumbnail from "./assets/thumbnails/a_million_to_one_thumbnail.png"
-import beyondTheOceanDoorThumbnail from "./assets/thumbnails/beyond_the_ocean_door_thumbnail.png"
-import thisIsTheBookTitleThumbnail from "./assets/thumbnails/this_is_the_book_title_thumbnail.png"
+import { fetchComicSummaries } from "./hooks/database"
 
-// Create a mapping of hero image names to imported images
-const thumbnailMap: Record<string, string> = {
-  "why_me_thumbnail.png": whyMeThumbnail,
-  "a_million_to_one_thumbnail.png": aMillionToOneThumbnail,
-  "beyond_the_ocean_door_thumbnail.png": beyondTheOceanDoorThumbnail,
-  "this_is_the_book_title_thumbnail.png": thisIsTheBookTitleThumbnail
+// Type definition for comic summary data
+type ComicSummary = {
+  id: string;
+  title: string;
+  rating: number;
+  description: string;
+  thumbnail: string;
 }
 
 const App = () => {
-  const [activeHeroIndex, setActiveHeroIndex] = useState<string>("1")
+  const [activeHeroIndex, setActiveHeroIndex] = useState<string>("0")
   const [isTransitioning, setIsTransitioning] = useState(false)
   const autoRotateTimeoutRef = useRef<number | null>(null)
   const transitionTimeoutRef = useRef<number | null>(null)
-  const heroKeys = Object.keys(heroData)
-  const activeHero = heroData[activeHeroIndex as keyof typeof heroData]
+  const [heroSummaries, setHeroSummaries] = useState<ComicSummary[]>([])
+  
+  // Use two separate image elements for crossfade
+  const [displayedImage, setDisplayedImage] = useState<string>("0");
+  const [backgroundImage1, setBackgroundImage1] = useState<string>("");
+  const [backgroundImage2, setBackgroundImage2] = useState<string>("");
+  const [activeLayer, setActiveLayer] = useState<number>(1);
+
+  // Load hero data from database
+  async function loadHero() {
+    try {
+      const summaries = await fetchComicSummaries();
+      setHeroSummaries(summaries);
+      
+      // Initialize with the first hero if available
+      if (summaries.length > 0) {
+        // Set initial background image
+        setBackgroundImage1(summaries[0].thumbnail || "");
+      }
+    } catch (error) {
+      console.error("Error loading hero data:", error);
+    }
+  }
+
+  // Load hero data on component mount
+  useEffect(() => {
+    loadHero();
+  }, []);
 
   // Preload all images to prevent flickering
   useEffect(() => {
     // Create image objects for preloading
-    Object.values(heroData).forEach(hero => {
-      const img = new Image();
-      img.src = thumbnailMap[hero.heroImage] || "";
+    heroSummaries.forEach(hero => {
+      if (hero.thumbnail) {
+        const img = new Image();
+        img.src = hero.thumbnail;
+      }
     });
-  }, []);
-
-  // Use two separate image elements for crossfade
-  const [displayedImage, setDisplayedImage] = useState<string>("1");
-  const [backgroundImage1, setBackgroundImage1] = useState<string>(thumbnailMap[heroData["1"].heroImage] || "");
-  const [backgroundImage2, setBackgroundImage2] = useState<string>("");
-  const [activeLayer, setActiveLayer] = useState<number>(1);
+  }, [heroSummaries]);
 
   // Auto-rotate hero items every 5 seconds
   useEffect(() => {
@@ -49,18 +68,21 @@ const App = () => {
       clearTimeout(autoRotateTimeoutRef.current);
     }
 
-    autoRotateTimeoutRef.current = window.setTimeout(() => {
-      const currentIndex = heroKeys.indexOf(displayedImage)
-      const nextIndex = (currentIndex + 1) % heroKeys.length
-      changeHero(heroKeys[nextIndex]);
-    }, 5000) as unknown as number;
+    // Only start auto-rotation if we have summaries
+    if (heroSummaries.length > 0) {
+      autoRotateTimeoutRef.current = window.setTimeout(() => {
+        const currentIndex = parseInt(activeHeroIndex);
+        const nextIndex = (currentIndex + 1) % heroSummaries.length;
+        changeHero(nextIndex.toString());
+      }, 5000) as unknown as number;
+    }
 
     return () => {
       if (autoRotateTimeoutRef.current) {
         clearTimeout(autoRotateTimeoutRef.current);
       }
     }
-  }, [displayedImage, heroKeys]);
+  }, [displayedImage, activeHeroIndex, heroSummaries]);
 
   // Clean up timeouts on unmount
   useEffect(() => {
@@ -74,15 +96,24 @@ const App = () => {
     };
   }, []);
 
+  // Get the active hero data
+  const activeHero = heroSummaries[parseInt(activeHeroIndex)] || {
+    id: "",
+    title: "",
+    rating: 0,
+    description: "",
+    thumbnail: ""
+  };
+
   // Calculate filled stars based on rating
-  const rating = activeHero.rating
-  const filledStars = Math.floor(rating)
-  const hasHalfStar = rating % 1 >= 0.25 && rating % 1 < 0.75
-  const hasFullStar = rating % 1 >= 0.75
-  const totalStars = 5
+  const rating = activeHero.rating;
+  const filledStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 >= 0.25 && rating % 1 < 0.75;
+  const hasFullStar = rating % 1 >= 0.75;
+  const totalStars = 5;
 
   const changeHero = (index: string) => {
-    if (index === displayedImage || isTransitioning) return;
+    if (index === displayedImage || isTransitioning || !heroSummaries.length) return;
 
     // Clean up any existing transition
     if (transitionTimeoutRef.current) {
@@ -91,11 +122,14 @@ const App = () => {
 
     setIsTransitioning(true);
 
+    const heroIndex = parseInt(index);
+    if (heroIndex < 0 || heroIndex >= heroSummaries.length) return;
+
     // Set the new image on the currently hidden layer
     if (activeLayer === 1) {
-      setBackgroundImage2(thumbnailMap[heroData[index as keyof typeof heroData].heroImage] || "");
+      setBackgroundImage2(heroSummaries[heroIndex].thumbnail || "");
     } else {
-      setBackgroundImage1(thumbnailMap[heroData[index as keyof typeof heroData].heroImage] || "");
+      setBackgroundImage1(heroSummaries[heroIndex].thumbnail || "");
     }
 
     // Toggle the active layer to reveal the new image
@@ -178,30 +212,29 @@ const App = () => {
                         />
                       )
                     })}
-                    <span className="ml-2 text-white text-sm">{activeHero.rating.toFixed(1)}</span>
+                    <span className="ml-2 text-white text-sm">{activeHero.rating?.toFixed(1) || "0.0"}</span>
                   </div>
 
                   {/* Title */}
                   <h1 className="text-center md:text-left text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 text-white">
-                    {activeHero.title}
+                    {activeHero.title || "Loading..."}
                   </h1>
 
                   {/* Tags */}
                   <div className="flex flex-wrap gap-2 mb-6 justify-center md:justify-start">
-                    {activeHero.genres.map((genre, index) => (
-                      <span key={index} className="px-3 py-1 bg-codetales-pink rounded-full text-xs text-white">
-                        {genre}
-                      </span>
-                    ))}
+                    {/* If we don't have genres in the database summary, we can't show them */}
+                    <span className="px-3 py-1 bg-codetales-pink rounded-full text-xs text-white">
+                      Comic
+                    </span>
                   </div>
 
                   {/* Description - Hidden on mobile */}
                   <p className="hidden md:block text-sm sm:text-base text-white/80 mb-8">
-                    {activeHero.description}
+                    {activeHero.description || "Loading description..."}
                   </p>
 
                   {/* Start Reading Button - Full width on mobile */}
-                  <Link to={`/content/${activeHero.title.toLowerCase().replace(/\s+/g, '-')}`} className="w-full md:w-auto flex items-center justify-center bg-codetales-pink text-white px-6 py-3 rounded-lg hover:bg-codetales-pink/90 transition-colors">
+                  <Link to={`/content/${activeHero.id}`} className="w-full md:w-auto flex items-center justify-center bg-codetales-pink text-white px-6 py-3 rounded-lg hover:bg-codetales-pink/90 transition-colors">
                     <Eye className="mr-2 w-5 h-5" /> Start Reading
                   </Link>
                 </div>
@@ -211,15 +244,15 @@ const App = () => {
 
           {/* Story Navigation Indicators */}
           <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2 z-30">
-            {Object.keys(heroData).map((key) => (
+            {heroSummaries.map((_, index) => (
               <button
-                key={key}
-                onClick={() => handleHeroChange(key)}
-                className={`h-2 rounded-full transition-all duration-300 ${displayedImage === key
+                key={index}
+                onClick={() => handleHeroChange(index.toString())}
+                className={`h-2 rounded-full transition-all duration-300 ${displayedImage === index.toString()
                   ? "w-8 bg-codetales-pink"
                   : "w-2 bg-white/50"
                   }`}
-                aria-label={`View ${heroData[key as keyof typeof heroData].title}`}
+                aria-label={`View ${heroSummaries[index]?.title || `Story ${index + 1}`}`}
               ></button>
             ))}
           </div>
@@ -232,23 +265,23 @@ const App = () => {
         <section className="py-10 px-4 sm:px-6 md:px-8 bg-codetales-dark">
           <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-codetales-pink border-l-4 border-codetales-pink pl-3">Stories For You</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {Object.values(heroData).map((story, index) => (
-              <Link 
-                key={index} 
-                to={`/content/${story.title.toLowerCase().replace(/\s+/g, '-')}`}
+            {heroSummaries.map((story, index) => (
+              <Link
+                key={index}
+                to={`/content/${story.id}`}
                 className="group block bg-codetales-dark border border-codetales-pink/20 rounded-lg overflow-hidden hover:border-codetales-pink transition-all duration-300 hover:shadow-[0_0_10px_rgba(236,72,153,0.3)]"
               >
                 <div className="relative aspect-[2/3] overflow-hidden">
-                  <img 
-                    src={thumbnailMap[story.heroImage]} 
-                    alt={story.title} 
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" 
+                  <img
+                    src={story.thumbnail}
+                    alt={story.title}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-3">
                     <div className="flex items-center gap-1 mb-2">
                       {Array.from({ length: 5 }).map((_, i) => (
-                        <Star 
-                          key={i} 
+                        <Star
+                          key={i}
                           className={`w-4 h-4 ${i < Math.floor(story.rating) ? 'fill-codetales-pink text-codetales-pink' : 'text-gray-400'}`}
                         />
                       ))}
@@ -268,7 +301,7 @@ const App = () => {
             <p className="text-white/80 text-center max-w-2xl mx-auto mb-10 text-sm sm:text-base">
               Immerse yourself in magical worlds where code meets creativity. Discover stories that blend technology with fantasy for a unique reading experience.
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
               {/* Left Feature */}
               <div className="bg-codetales-dark/50 backdrop-blur-sm rounded-lg overflow-hidden border border-codetales-pink/30 shadow-lg hover:shadow-codetales-pink/20 transition-shadow">
@@ -282,7 +315,7 @@ const App = () => {
                   </Link>
                 </div>
               </div>
-              
+
               {/* Right Feature */}
               <div className="bg-codetales-dark/50 backdrop-blur-sm rounded-lg overflow-hidden border border-codetales-pink/30 shadow-lg hover:shadow-codetales-pink/20 transition-shadow">
                 <div className="p-6">
@@ -336,7 +369,7 @@ const App = () => {
         <section className="py-16 px-4 sm:px-6 md:px-8 bg-codetales-dark/90">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-2xl sm:text-3xl font-bold mb-10 text-codetales-pink border-l-4 border-codetales-pink pl-3">Browse By Category</h2>
-            
+
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6">
               {/* Category 1 */}
               <Link to="/content/categories/coding" className="group flex flex-col items-center p-4 bg-codetales-dark/50 rounded-lg border border-codetales-pink/20 hover:border-codetales-pink/50 transition-colors text-center">
@@ -346,7 +379,7 @@ const App = () => {
                 <h3 className="text-sm font-medium text-white">Coding</h3>
                 <p className="mt-1 text-xs text-white/60">24 stories</p>
               </Link>
-              
+
               {/* Category 2 */}
               <Link to="/content/categories/fantasy" className="group flex flex-col items-center p-4 bg-codetales-dark/50 rounded-lg border border-codetales-pink/20 hover:border-codetales-pink/50 transition-colors text-center">
                 <div className="w-14 h-14 mb-3 flex items-center justify-center bg-codetales-pink/20 rounded-full group-hover:bg-codetales-pink/30 transition-colors">
@@ -355,7 +388,7 @@ const App = () => {
                 <h3 className="text-sm font-medium text-white">Fantasy</h3>
                 <p className="mt-1 text-xs text-white/60">18 stories</p>
               </Link>
-              
+
               {/* Category 3 */}
               <Link to="/content/categories/adventure" className="group flex flex-col items-center p-4 bg-codetales-dark/50 rounded-lg border border-codetales-pink/20 hover:border-codetales-pink/50 transition-colors text-center">
                 <div className="w-14 h-14 mb-3 flex items-center justify-center bg-codetales-pink/20 rounded-full group-hover:bg-codetales-pink/30 transition-colors">
@@ -364,7 +397,7 @@ const App = () => {
                 <h3 className="text-sm font-medium text-white">Adventure</h3>
                 <p className="mt-1 text-xs text-white/60">15 stories</p>
               </Link>
-              
+
               {/* Category 4 */}
               <Link to="/content/categories/sci-fi" className="group flex flex-col items-center p-4 bg-codetales-dark/50 rounded-lg border border-codetales-pink/20 hover:border-codetales-pink/50 transition-colors text-center">
                 <div className="w-14 h-14 mb-3 flex items-center justify-center bg-codetales-pink/20 rounded-full group-hover:bg-codetales-pink/30 transition-colors">
@@ -373,7 +406,7 @@ const App = () => {
                 <h3 className="text-sm font-medium text-white">Sci-Fi</h3>
                 <p className="mt-1 text-xs text-white/60">12 stories</p>
               </Link>
-              
+
               {/* Category 5 */}
               <Link to="/content/categories/horror" className="group flex flex-col items-center p-4 bg-codetales-dark/50 rounded-lg border border-codetales-pink/20 hover:border-codetales-pink/50 transition-colors text-center">
                 <div className="w-14 h-14 mb-3 flex items-center justify-center bg-codetales-pink/20 rounded-full group-hover:bg-codetales-pink/30 transition-colors">
@@ -382,7 +415,7 @@ const App = () => {
                 <h3 className="text-sm font-medium text-white">Horror</h3>
                 <p className="mt-1 text-xs text-white/60">8 stories</p>
               </Link>
-              
+
               {/* Category 6 */}
               <Link to="/content/categories/mystery" className="group flex flex-col items-center p-4 bg-codetales-dark/50 rounded-lg border border-codetales-pink/20 hover:border-codetales-pink/50 transition-colors text-center">
                 <div className="w-14 h-14 mb-3 flex items-center justify-center bg-codetales-pink/20 rounded-full group-hover:bg-codetales-pink/30 transition-colors">
@@ -391,7 +424,7 @@ const App = () => {
                 <h3 className="text-sm font-medium text-white">Mystery</h3>
                 <p className="mt-1 text-xs text-white/60">10 stories</p>
               </Link>
-              
+
               {/* Category 7 */}
               <Link to="/content/categories/thriller" className="group flex flex-col items-center p-4 bg-codetales-dark/50 rounded-lg border border-codetales-pink/20 hover:border-codetales-pink/50 transition-colors text-center">
                 <div className="w-14 h-14 mb-3 flex items-center justify-center bg-codetales-pink/20 rounded-full group-hover:bg-codetales-pink/30 transition-colors">
@@ -400,7 +433,7 @@ const App = () => {
                 <h3 className="text-sm font-medium text-white">Thriller</h3>
                 <p className="mt-1 text-xs text-white/60">7 stories</p>
               </Link>
-              
+
               {/* Category 8 - All Categories */}
               <Link to="/content/categories" className="group flex flex-col items-center p-4 bg-codetales-dark/50 rounded-lg border border-codetales-pink/20 hover:border-codetales-pink/50 transition-colors text-center">
                 <div className="w-14 h-14 mb-3 flex items-center justify-center bg-codetales-pink/20 rounded-full group-hover:bg-codetales-pink/30 transition-colors">
@@ -420,8 +453,8 @@ const App = () => {
               Get access to exclusive stories, early releases, and connect with fellow coding enthusiasts and storytellers.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link 
-                to="/about" 
+              <Link
+                to="/about"
                 className="w-full sm:w-auto px-6 py-3 bg-transparent border border-codetales-pink text-codetales-pink rounded-lg font-medium hover:bg-codetales-pink/10 transition-colors"
               >
                 Learn More
@@ -429,7 +462,6 @@ const App = () => {
             </div>
           </div>
         </section>
-        
         <Footer />
       </main>
     </>

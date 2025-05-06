@@ -1,5 +1,5 @@
+import { ErrorPage } from './ErrorPage';
+
 export const NotFoundPage = () => {
-    return (
-        <div>NotFoundPage</div>
-    )
+    return <ErrorPage />;
 }
