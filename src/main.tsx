@@ -16,6 +16,8 @@ import { ErrorPage } from './pages/ErrorPage.tsx';
 import { AboutPage } from './pages/AboutPage.tsx';
 import { ContentPage } from './pages/ContentPage.tsx';
 import { ComicDetail } from './pages/ComicDetail.tsx';
+import { PrivacyPolicy } from './pages/PrivacyPolicy.tsx';
+import { TermsUse } from './pages/TermsUse.tsx';
 
 const router = createBrowserRouter([
   {
@@ -35,18 +37,24 @@ const router = createBrowserRouter([
     path: "/content/:contentId",
     element: <ContentPage />,
     errorElement: <ErrorPage />,
-    children: [
-      {
-        path: "read/comic/chapter/:number",
-        element: <ComicDetail />,
-        errorElement: <ErrorPage />,
-      },
-    ]
   },
   {
     path: "/about",
     element: <AboutPage />,
     errorElement: <ErrorPage />,
+  },
+  {
+    path: "read/comic/:contentId/chapter/:number",
+    element: <ComicDetail />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/privacy",
+    element: <PrivacyPolicy />,
+  },
+  {
+    path: "/terms",
+    element: <TermsUse />
   }
 ])
 

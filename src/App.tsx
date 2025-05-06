@@ -15,6 +15,7 @@ type ComicSummary = {
   rating: number;
   description: string;
   thumbnail: string;
+  genre: Array<string>;
 }
 
 const App = () => {
@@ -23,7 +24,7 @@ const App = () => {
   const autoRotateTimeoutRef = useRef<number | null>(null)
   const transitionTimeoutRef = useRef<number | null>(null)
   const [heroSummaries, setHeroSummaries] = useState<ComicSummary[]>([])
-  
+
   // Use two separate image elements for crossfade
   const [displayedImage, setDisplayedImage] = useState<string>("0");
   const [backgroundImage1, setBackgroundImage1] = useState<string>("");
@@ -34,8 +35,9 @@ const App = () => {
   async function loadHero() {
     try {
       const summaries = await fetchComicSummaries();
+
       setHeroSummaries(summaries);
-      
+
       // Initialize with the first hero if available
       if (summaries.length > 0) {
         // Set initial background image
@@ -102,7 +104,8 @@ const App = () => {
     title: "",
     rating: 0,
     description: "",
-    thumbnail: ""
+    thumbnail: "",
+    genre: []
   };
 
   // Calculate filled stars based on rating
@@ -222,14 +225,16 @@ const App = () => {
 
                   {/* Tags */}
                   <div className="flex flex-wrap gap-2 mb-6 justify-center md:justify-start">
-                    {/* If we don't have genres in the database summary, we can't show them */}
-                    <span className="px-3 py-1 bg-codetales-pink rounded-full text-xs text-white">
-                      Comic
-                    </span>
+                    {/* Fixed: Add array fallback when genre might be undefined */}
+                    {(activeHero.genre || []).map((gen, index) => (
+                      <span key={index} className="px-3 py-1 bg-codetales-pink rounded-full text-xs text-white">
+                        {gen}
+                      </span>
+                    ))}
                   </div>
 
                   {/* Description - Hidden on mobile */}
-                  <p className="hidden md:block text-sm sm:text-base text-white/80 mb-8">
+                  <p className="text-sm sm:text-base text-white/80 mb-8">
                     {activeHero.description || "Loading description..."}
                   </p>
 

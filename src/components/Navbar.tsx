@@ -49,9 +49,6 @@ const Navbar = () => {
                     <Link to="/about" className="text-sm font-medium text-codetales-white hover:text-codetales-pink transition duration-300">
                         About
                     </Link>
-                    <Link to="/content/library" className="text-sm font-medium text-codetales-white hover:text-codetales-pink transition duration-300">
-                        Library
-                    </Link>
                 </div>
             </div>
 
