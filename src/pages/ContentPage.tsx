@@ -1,8 +1,10 @@
 import { useParams, Link } from 'react-router-dom';
 import heroData from '../data/hero.section.json';
-import { useState, useEffect, useRef } from 'react';
-import { Footer } from '@/components/Footer';
-import Navbar from '@/components/Navbar';
+import { useState, useEffect } from 'react';
+import eyeIcon from '../assets/icons/eye.png';
+import chatBubbleIcon from '../assets/icons/chat_bubble.png';
+import heartIcon from '../assets/icons/heart2.png';
+import Navbar from '../components/Navbar';
 
 interface BookInfo {
     title: string;
@@ -55,20 +57,23 @@ export const ContentPage = () => {
         }
     ];
 
+    // Placeholder stats
+    const likes = 18;
+    const comments = 16;
+    const views = 230;
+
     useEffect(() => {
         if (title) {
             try {
-                // Compare the URL-formatted title with a similarly formatted version of each book title
                 const decodedTitle = decodeURIComponent(title);
                 const bookEntry = Object.entries(heroData).find(
                     ([_, data]) => {
                         const formattedDataTitle = (data as BookInfo).title.toLowerCase().replace(/\s+/g, '-')
-                            .replace(/[^\w-]/g, ''); // Remove special characters
+                            .replace(/[^\w-]/g, '');
                         const formattedParamTitle = decodedTitle.toLowerCase().replace(/[^\w-]/g, '');
                         return formattedDataTitle === formattedParamTitle;
                     }
                 );
-
                 if (bookEntry) {
                     setBookInfo(bookEntry[1] as BookInfo);
                     // In a real app, you would fetch comments here
@@ -114,128 +119,154 @@ export const ContentPage = () => {
     return (
         <>
             <Navbar />
-            <div className="content-page">
-                <div className="hero-section bg-cover bg-center p-8 text-white" 
-                     style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(/src/assets/thumbnails/${bookInfo.heroImage})` }}>
-                    <div className="book-header">
-                        <h1 className="text-2xl font-bold">{bookInfo.title}</h1>
-                        <div className="author-info mt-1">Author: BSCS - 2A</div>
-                    </div>
-                    <div className="book-details flex flex-col md:flex-row gap-6 mt-4">
+            <div className="content-hero-section dark-bg">
+                <div className="hero-card-nobg flex-row pt-0 items-start gap-x-10">
+                    <div className="hero-cover">
                         <img 
                             src={`/src/assets/thumbnails/${bookInfo.heroImage}`} 
                             alt={bookInfo.title} 
-                            className="book-image max-w-[200px] shadow-lg"
+                            className="cover-image"
                         />
-                        <div className="book-info">
-                            <p className="book-description">{bookInfo.description}</p>
-                            <div className="book-metadata mt-4">
-                                <p className="book-rating">
-                                    Rating: {Array(Math.round(bookInfo.rating)).fill('★').join('')} {bookInfo.rating}/5
-                                </p>
-                                <div className="book-genres flex flex-wrap gap-2 mt-2">
-                                    {bookInfo.genres.map((genre, index) => (
-                                        <span key={index} className="genre-tag bg-gray-800 px-3 py-1 rounded-full text-xs">
-                                            {genre}
-                                        </span>
-                                    ))}
-                                </div>
+                        <div className="hero-stats-vertical">
+                            <div className="hero-stars-row">
+                                <span className="hero-stars">{'★'.repeat(Math.round(bookInfo.rating))}{'☆'.repeat(5 - Math.round(bookInfo.rating))}</span>
+                                <span className="hero-rating">{bookInfo.rating.toFixed(1)}</span>
+                            </div>
+                            <div className="hero-meta-row">
+                                <span className="hero-likes">{likes} likes</span>
+                                <span className="hero-comments">{comments} comments</span>
+                                <span className="hero-views">{views} views</span>
                             </div>
                         </div>
                     </div>
-
-                    <div className="action-buttons mt-6 flex gap-4">
-                        <button 
-                            className="read-btn bg-codetales-pink text-white px-6 py-2 rounded font-bold hover:bg-codetales-pink/90 transition-colors"
-                            onClick={scrollToLatestRelease}
-                        >
-                            Read
-                        </button>
-                        <button 
-                            className="comments-btn bg-transparent text-white px-6 py-2 rounded border border-white hover:bg-white/10 transition-colors"
-                            onClick={scrollToComments}
-                        >
-                            Comments
-                        </button>
+                    <div className="hero-info mt-0 pt-15">
+                        <h1 className="hero-title mt-0 pt-0 -ml-40">{bookInfo.title}</h1>
+                        <div className="hero-author mt-2 -ml-40">Author: B85C - 3A</div>
+                        <p className="hero-description mt-3 -ml-40">{bookInfo.description}</p>
+                        <div className="hero-buttons flex-row mt-4 -ml-40" style={{alignItems: 'center'}}>
+                            <button className="btn hero-read-btn" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6em', borderRadius: '1rem', padding: '0.7rem 2.2rem'}}>
+                                <img src={eyeIcon} alt="Read" style={{ width: '1.3em', height: '1.3em' }} />
+                                <span>Read</span>
+                            </button>
+                            <button className="btn hero-comments-btn outlined" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6em', borderRadius: '1rem', padding: '0.7rem 2.2rem'}}>
+                                <img src={chatBubbleIcon} alt="Comments" style={{ width: '1.3em', height: '1.3em', filter: 'drop-shadow(0 0 0.5px var(--codetales-pink))' }} />
+                                <span>Comments</span>
+                            </button>
+                            <button className="btn hero-heart-btn outlined" aria-label="Like" style={{
+                                background: 'transparent',
+                                color: 'var(--codetales-pink)',
+                                border: '2px solid var(--codetales-pink)',
+                                borderRadius: '1rem',
+                                padding: '0.7rem 2.2rem',
+                                fontWeight: 700,
+                                fontSize: '1.1rem',
+                                marginLeft: '0.5rem',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'background 0.2s, color 0.2s',
+                            }}>
+                                <img src={heartIcon} alt="Like" style={{ width: '1.3em', height: '1.3em' }} />
+                            </button>
+                        </div>
+                        <div className="hero-genres -ml-70 flex-nowrap">
+                            {bookInfo.genres.map((genre, idx) => (
+                                <span key={idx} className="genre-pill">{genre}</span>
+                            ))}
+                        </div>
                     </div>
                 </div>
-
-                {/* Latest Release Section */}
-                <div className="latest-release p-8 border-b border-gray-700" ref={latestReleaseRef}>
-                    <h2 className="text-xl font-bold mb-4">Latest Release</h2>
-                    <div className="chapter">
-                        <Link 
-                            to={`/content/${title}/read/comic`} 
-                            className="block p-4 bg-gray-900 rounded-md hover:bg-gray-800 transition-colors text-white no-underline"
-                        >
-                            <div className="chapter-header flex justify-between">
-                                <h3 className="font-semibold">Chapter {latestChapter.number}</h3>
-                                <span className="text-gray-400">{latestChapter.releaseDate}</span>
-                            </div>
-                        </Link>
+            </div>
+            {/* Bottom Section: Latest Release, Comments */}
+            <div className="content-bottom-section" style={{ maxWidth: '1250px', margin: '2rem auto', background: 'var(--codetales-dark2)', borderRadius: '1.5rem', padding: '2rem', color: 'white' }}>
+                {/* Latest Release */}
+                <div className="latest-release-section" style={{ borderBottom: '5px solid var(--codetales-pink)', paddingBottom: '2rem', marginBottom: '2.2rem' }}>
+                    <h2 style={{ fontSize: '1.1rem', fontWeight: 400, margin: 0, color: 'white' }}>Latest Release</h2>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.7rem' }}>
+                        <span style={{ fontWeight: 700, fontSize: '1.15rem', color: 'white' }}>Chapter 1</span>
+                        <span style={{ color: '#aaa', fontSize: '0.98em' }}>1 hour ago</span>
                     </div>
                 </div>
-
-                {/* Comments Section */}
-                <div className="comments-section p-8" ref={commentsRef}>
-                    <h2 className="text-xl font-bold mb-6">Comments</h2>
-                    
-                    {/* Comment Form */}
-                    <div className="comment-form mb-8">
-                        <h3 className="text-lg font-medium mb-3">Write your comments</h3>
-                        <form onSubmit={handleSubmitComment} className="flex flex-col gap-4">
-                            <textarea 
-                                value={commentText}
-                                onChange={(e) => setCommentText(e.target.value)}
-                                placeholder="Write your comments"
-                                className="w-full min-h-[100px] p-2 rounded bg-gray-900 text-white border border-gray-700 focus:border-codetales-pink focus:outline-none"
+                {/* Write Your Comments */}
+                <div className="write-comments-section" style={{ marginBottom: '2.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.7rem' }}>
+                        <img src={chatBubbleIcon} alt="Comments" style={{ width: '1.3em', height: '1.3em', filter: 'drop-shadow(0 0 0.5px var(--codetales-pink))' }} />
+                        <h3 style={{ fontSize: '1.05rem', fontWeight: 500, color: 'var(--codetales-pink)', margin: 0 }}>Write your comments</h3>
+                    </div>
+                    <form style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
+                        <textarea
+                            placeholder="Write your comments"
+                            style={{
+                                minHeight: '100px',
+                                borderRadius: '0.7rem',
+                                border: '2px solid var(--codetales-pink)',
+                                background: 'transparent',
+                                color: 'white',
+                                padding: '1rem',
+                                fontSize: '1rem',
+                                resize: 'vertical',
+                                outline: 'none',
+                            }}
+                        />
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.7rem' }}>
+                            <input
+                                type="text"
+                                placeholder="Enter your name"
+                                style={{
+                                    borderRadius: '0.7rem',
+                                    border: '2px solid var(--codetales-pink)',
+                                    background: 'transparent',
+                                    color: 'white',
+                                    padding: '0.7rem 1.2rem',
+                                    fontSize: '1rem',
+                                    width: '200px',
+                                    outline: 'none',
+                                }}
                             />
-                            <div className="flex justify-between items-center">
-                                <input
-                                    type="text"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    placeholder="Enter your name"
-                                    className="p-2 rounded bg-gray-900 text-white border border-gray-700 focus:border-codetales-pink focus:outline-none"
-                                />
-                                <button
-                                    type="submit"
-                                    className="bg-codetales-pink text-white px-6 py-2 rounded hover:bg-codetales-pink/90 transition-colors"
-                                >
-                                    Post
-                                </button>
-                            </div>
-                        </form>
+                            <button
+                                type="submit"
+                                className="btn hero-read-btn"
+                                style={{
+                                    borderRadius: '0.7rem',
+                                    padding: '0.7rem 2.2rem',
+                                    fontWeight: 700,
+                                    background: 'var(--codetales-pink)',
+                                    color: 'white',
+                                    border: 'none',
+                                    fontSize: '1.05rem',
+                                    boxShadow: 'none',
+                                }}
+                            >
+                                Post
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                {/* Comments List */}
+                <div className="comments-section">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.7rem' }}>
+                        <img src={chatBubbleIcon} alt="Comments" style={{ width: '1.3em', height: '1.3em', filter: 'drop-shadow(0 0 0.5px var(--codetales-pink))' }} />
+                        <h3 style={{ fontSize: '1.5rem', fontWeight: 500, color: 'var(--codetales-pink)', margin: 0 }}>Comments</h3>
+                        <div style={{ flex: 1, borderBottom: '2px solid var(--codetales-pink)', marginLeft: '0.7rem' }} />
+                        <span style={{ color: 'var(--codetales-pink)', fontWeight: 500, fontSize: '1.01rem', marginLeft: '1.5rem', cursor: 'pointer' }}>Newest</span>
+                        <span style={{ color: 'white', fontWeight: 500, fontSize: '1.01rem', marginLeft: '1.2rem', cursor: 'pointer' }}>Oldest</span>
                     </div>
-
-                    {/* Comments List */}
-                    <div className="comments-sort mb-4 flex">
-                        <button 
-                            className="bg-transparent text-codetales-pink border-none mr-4 font-bold cursor-pointer"
-                        >
-                            Newest
-                        </button>
-                        <button
-                            className="bg-transparent text-gray-400 border-none cursor-pointer hover:text-codetales-pink transition-colors"
-                        >
-                            Oldest
-                        </button>
-                    </div>
-
-                    <div className="comments-list space-y-6">
-                        {comments.map((comment, index) => (
-                            <div key={index} className="comment mb-6 pb-4 border-b border-gray-700"> 
-                                <div className="flex justify-between">
-                                    <strong className="text-codetales-pink">{comment.username}</strong>
-                                    <span className="text-xs text-gray-400">{comment.timestamp}</span>
+                    <div className="comment-list">
+                        {/* Example comments, replace with dynamic data later */}
+                        {[1,2,3].map((_, idx) => (
+                            <div key={idx} className="comment-item" style={{ marginBottom: '1rem' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <span style={{ fontWeight: 700, color: 'var(--codetales-pink)', fontSize: '1.01rem' }}>Charles Peter Tiggy</span>
+                                    <span style={{ color: 'var(--codetales-pink)', fontWeight: 400, fontSize: '0.98em' }}>( 1 minute ago )</span>
                                 </div>
-                                <p className="mt-2">{comment.text}</p>
+                                <div style={{ marginTop: '0.3rem', color: 'white', fontSize: '1.01rem' }}>This story is so good. Im out of words at this new possibility of the comic. It</div>
+                                <div style={{ borderBottom: '1.5px solid var(--codetales-pink)', marginTop: '0.7rem' }} />
                             </div>
                         ))}
                     </div>
                 </div>
             </div>
-            <Footer />
         </>
     );
 }
