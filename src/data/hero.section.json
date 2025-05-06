@@ -1,0 +1,43 @@
+{
+    "1": {
+        "title": "Why Me?",
+        "genres": [
+            "Computer Science",
+            "Adventure",
+            "Fantasy"
+        ],
+        "description": "Matt, a sleep-deprived computer science senior, is trapped into a broken virtual reality world he created years ago and must debug it to escape, facing off against his own chaotic code and a monstrous Clippy-like boss.",
+        "heroImage": "why_me_thumbnail.png",
+        "rating": 4.5
+    },
+    "2": {
+        "title": "A Million To One",
+        "genres": [
+            "Audiobook"
+        ],
+        "description": "As our story unfolds, it becomes clear that there is hell, and then there is hell on earth. And worst of all...there are some demons you never see coming.",
+        "heroImage": "a_million_to_one_thumbnail.png",
+        "rating": 4.23
+    },
+    "3": {
+        "title": "Beyond the Ocean Door",
+        "genres": [
+            "Fantasy",
+            "Adventure"
+        ],
+        "description": "An epic fantasy adventure that takes you on a journey through a world filled with magic, danger, and unexpected twists.",
+        "heroImage": "beyond_the_ocean_door_thumbnail.png",
+        "rating": 3.7
+    },
+    "4": {
+        "title": "This is the Book Title",
+        "genres": [
+            "Fantasy",
+            "Adventure",
+            "Thriller"
+        ],
+        "description": "An epic fantasy adventure that takes you on a journey through a world filled with magic, danger, and unexpected twists.",
+        "heroImage": "this_is_the_book_title_thumbnail.png",
+        "rating": 3.7
+    }
+}
