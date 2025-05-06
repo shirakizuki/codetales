@@ -201,7 +201,7 @@ const App = () => {
                   </p>
 
                   {/* Start Reading Button - Full width on mobile */}
-                  <Link to={`/content/stories/${activeHero.title.toLowerCase().replace(/\s+/g, '-')}`} className="w-full md:w-auto flex items-center justify-center bg-codetales-pink text-white px-6 py-3 rounded-lg hover:bg-codetales-pink/90 transition-colors">
+                  <Link to={`/content/${activeHero.title.toLowerCase().replace(/\s+/g, '-')}`} className="w-full md:w-auto flex items-center justify-center bg-codetales-pink text-white px-6 py-3 rounded-lg hover:bg-codetales-pink/90 transition-colors">
                     <Eye className="mr-2 w-5 h-5" /> Start Reading
                   </Link>
                 </div>
@@ -235,7 +235,7 @@ const App = () => {
             {Object.values(heroData).map((story, index) => (
               <Link 
                 key={index} 
-                to={`/content/stories/${story.title.toLowerCase().replace(/\s+/g, '-')}`}
+                to={`/content/${story.title.toLowerCase().replace(/\s+/g, '-')}`}
                 className="group block bg-codetales-dark border border-codetales-pink/20 rounded-lg overflow-hidden hover:border-codetales-pink transition-all duration-300 hover:shadow-[0_0_10px_rgba(236,72,153,0.3)]"
               >
                 <div className="relative aspect-[2/3] overflow-hidden">

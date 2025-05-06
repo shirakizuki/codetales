@@ -31,29 +31,28 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     errorElement: <ErrorPage />,
+  },
+  {
+    path: "/content/:title",
+    element: <ContentPage />,
+    errorElement: <ErrorPage />,
     children: [
       {
-        path: "about",
-        element: <AboutPage />,
+        path: "read/comic/:titleSlug/:filters?",
+        element: <ComicDetail />,
+        errorElement: <ErrorPage />,
       },
       {
-        path: "content/:contentId",
-        element: <ContentPage />,
+        path: "read/story/:titleSlug/:filters?",
+        element: <StoryDetail />,
         errorElement: <ErrorPage />,
-        children: [
-          {
-            path: "read/comic/:titleSlug/:filters?",
-            element: <ComicDetail />,
-            errorElement: <ErrorPage />,
-          },
-          {
-            path: "read/story/:titleSlug/:filters?",
-            element: <StoryDetail />,
-            errorElement: <ErrorPage />,
-          }
-        ]
       }
     ]
+  },
+  {
+    path: "/about",
+    element: <AboutPage />,
+    errorElement: <ErrorPage />,
   }
 ])
 
