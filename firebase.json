@@ -9,8 +9,7 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "cleanUrls": true,
-    "rewrites" : [
+    "rewrites": [
       {
         "source": "**",
         "destination": "/index.html"
