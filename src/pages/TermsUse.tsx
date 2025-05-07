@@ -171,11 +171,10 @@ export const TermsUse = () => {
                         <section>
                             <h2 className="text-2xl font-semibold mb-3 text-codetales-pink">Contact Us</h2>
                             <p className="mb-4">
-                                If you have any questions about these Terms, please contact us:
+                                If you have any questions about this privacy policy, please contact us main developer:
                             </p>
                             <div className="bg-codetales-dark border border-codetales-pink rounded-lg p-4">
-                                <p className="mb-2"><span className="font-medium">Email:</span> terms@codetales.com</p>
-                                <p><span className="font-medium">Address:</span> CodeTales Headquarters, 123 Tech Street, San Francisco, CA 94105</p>
+                                <p className="mb-2"><span className="font-medium">Email:</span> tigoypetercharles@outlook.com</p>
                             </div>
                         </section>
 

@@ -43,7 +43,7 @@ export const AboutPage = () => {
                             <p className="text-sm text-codetales-pink mb-3">Program Director</p>
                             <p className="text-base leading-relaxed mb-4 text-codetales-white">
                                 With 12+ years in software engineering and education,
-                                Prof. Johnson specializes in algorithms and system architecture.
+                                Prof. Nathanael specializes in algorithms and system architecture.
                             </p>
                         </div>
 
@@ -51,7 +51,7 @@ export const AboutPage = () => {
                             <h3 className="text-lg mb-2 text-codetales-white font-semibold">Matt Alexuis Y. Merano</h3>
                             <p className="text-sm text-codetales-pink mb-3">Lead Instructor</p>
                             <p className="text-base leading-relaxed mb-4 text-codetales-white">
-                                Dr. Patel brings industry experience from her work at tech companies,
+                                Dr. Matt brings industry experience from her work at tech companies,
                                 focusing on software development and database systems.
                             </p>
                         </div>
@@ -60,7 +60,7 @@ export const AboutPage = () => {
                             <h3 className="text-lg mb-2 text-codetales-white font-semibold">Raj Tag-at</h3>
                             <p className="text-sm text-codetales-pink mb-3">Teaching Assistant</p>
                             <p className="text-base leading-relaxed mb-4 text-codetales-white">
-                                A graduate researcher in Computer Science, James supports students with
+                                A graduate researcher in Computer Science, Raj supports students with
                                 coding challenges and provides guidance on programming concepts.
                             </p>
                         </div>

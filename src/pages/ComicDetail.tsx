@@ -87,6 +87,13 @@ export const ComicDetail = () => {
     return (
         <div className="flex flex-col min-h-screen bg-codetales-dark">
             <Navbar />
+            <div className="w-full bg-yellow-600 bg-opacity-80 text-white p-3 sm:p-4 mx-auto text-center mb-4">
+                <div className="max-w-3xl mx-auto">
+                    <p className="text-sm sm:text-base">
+                        <span className="font-semibold">Note:</span> Images may take some time to load on first view. Please be patient while we load the best quality experience for you.
+                    </p>
+                </div>
+            </div>
             <div className="w-full px-4 sm:px-6 md:px-8">
                 {loading ? (
                     <div className="flex flex-col items-center justify-center my-16 text-white">
